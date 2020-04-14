@@ -13,8 +13,13 @@ using std::exception;
 using std::invalid_argument;
 
 
-Tree::Tree(const string& head) : _root(new node(head)), _size(1) {
-    cout << head <<endl;
+// global variables
+    const static string& great = "great-" ;
+    const static string& grand = "grand" ;
+
+
+Tree::Tree(const string& head) : _root(new node(head)), _size(1) 
+{
 }
 
 Tree::~Tree(){
@@ -46,7 +51,7 @@ Tree& Tree::addFather(const string &son, const string &father)
     }
     try{
     decendant -> addFather(father);
-    cout <<  decendant -> getName() << " , "  << decendant -> _father ->getName() << endl;
+    //cout <<  decendant -> getName() << " , "  << decendant -> _father ->getName() << endl;
     } catch (const exception& e) {
         cout << e.what() << endl;
     }
@@ -66,7 +71,7 @@ Tree& Tree::addMother(const string &son, const string &mother)
     }
     try{
     decendant -> addMother(mother);
-    cout <<  decendant -> getName() << " , "  << decendant -> _mother ->getName() << endl;
+   // cout <<  decendant -> getName() << " , "  << decendant -> _mother ->getName() << endl;
     } catch (const exception& e) {
         cout << e.what() << endl;
     }
@@ -75,8 +80,66 @@ Tree& Tree::addMother(const string &son, const string &mother)
 
 const string Tree::relation(const string& family_member)
 {
-    return " ";
+    if (_root -> getName() == family_member)
+    {
+        return "me";
+    }
+    try{
+    node* ancestor = search(family_member, _root);
+    //cout << "ancestor is : " << ancestor -> getName() << endl;
+    if (ancestor == NULL)
+    {
+        return "unrelated" ;
+    }
+    int counter;
+    counter = countTreeLevel(ancestor,0);
+
+    const string& sex = ancestor -> whatIsMySex() ? "mother" : "father" ;
+
+
+    //cout << " levels = " << counter << endl;
+    if ( counter == 1 )
+    { 
+        return sex;
+    }
+    else if ( counter == 2 ) 
+    {
+         return grand + sex ;
+    }
+    else
+    {
+        
+        string ans = "";
+        
+        size_t diff = counter - 2 ;
+        for (size_t i = diff; i < counter; i++)
+        {
+            
+            ans.append(great);
+        }
+            ans.append(grand);
+            ans.append(sex);
+            return ans;
+    }
+} 
+catch (const exception& e) {
+    cout << e.what() << endl;
 }
+return " i got here somehow ";
+}
+
+int Tree::countTreeLevel(node* countFromHere,int counter)
+{
+    //cout << " Goes with this line is the lever counter " << counter << endl;
+    if ( countFromHere -> getSon() != NULL )
+    {
+        counter++;
+        return countTreeLevel ( countFromHere -> getSon() , counter );
+    }
+    
+    return counter;
+}
+
 const string& Tree::find(const string &relation)
 {
     return relation;
@@ -89,7 +152,8 @@ void Tree::remove(const string& family_memeber_toRemove){
 
 void Tree::display()
 {
-    print_node(_root);   
+    print_node(_root);
+    cout << endl;
 }
 
 node* Tree::find_node(const string& relation)
@@ -109,18 +173,34 @@ void Tree::print_node(node* current)
     print_node( current -> _mother);                                    
 }
 
-
-node::node(const string &name) : _name(name), _father(nullptr), _mother(nullptr) {}
+//constructor
+node::node(const string &name) : _name(name), _father(nullptr), _mother(nullptr), _origin_son(nullptr) {}
 
 
 node* node::addMother(const string &mother_name)
 {
     this->_mother = new node(mother_name);
+    this -> _mother -> _origin_son = this ;
     return this;
 }
 node* node::addFather(const string &father_name){
     this->_father = new node(father_name);
+    this -> _father -> _origin_son = this;
     return this;
+}
+
+bool node::whatIsMySex()
+{
+    //cout << " every name that goes with this line is a part of WHATISMYSEX func, this time it is =  " << this -> getName() << endl;
+    
+    if ( this -> getSon() -> getMother() != NULL && this -> getName() == this -> getSon() -> getMother() -> getName() )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 node *node::find(const string &relation)
@@ -139,6 +219,10 @@ node* node::getFather(){
 node* node::getMother(){
     return this -> _mother;
 }
+node* node::getSon(){
+    return this -> _origin_son;
+}
+
 
 node* Tree::find_node_by_name_father(const string& name,node* current){
     if (current -> getFather() == nullptr && current -> getName() == name)
@@ -171,7 +255,7 @@ node* Tree::find_node_by_name_mother(const string& name,node* current){
  }
 
  node* Tree::search(const std::string& decendant,node* current){
-     try{
+     
      if (decendant == current -> getName())   // found you!
      {
          return current;
@@ -230,13 +314,11 @@ node* Tree::find_node_by_name_mother(const string& name,node* current){
              }
              else
              {
-                 throw invalid_argument("unable to find"); // it's neither of them.
+                 return NULL; // it's neither of them.
              }
          }
      }
-     } catch (const exception& e) {
-        cout << e.what() << endl;
-    }
+    
      return NULL;
  }
      
@@ -248,6 +330,6 @@ node* Tree::find_node_by_name_mother(const string& name,node* current){
 
 
  
-//constructor
+
 
 

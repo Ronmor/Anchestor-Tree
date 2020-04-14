@@ -21,12 +21,17 @@ private:
 public:
     node*  _father;
     node*  _mother;
+    node*  _origin_son;
 
+    //Structure
     node(const std::string &name);
     const std::string& getName();
     node* getMother();
     node* getFather();
+    node* getSon();
     
+
+    //Methods
     node* addMother(const std::string &mother_name);
     node* addFather(const std::string &father_name);
     node *relation(node *relativeName);
@@ -34,6 +39,7 @@ public:
     node *find(const std::string &relation);
     node *MinValueSubtree(node *root);
     void remove(node *ptr);
+    bool whatIsMySex();
 
     friend class Tree;
 
@@ -60,6 +66,8 @@ public:
     const std::string& find(const std::string&);
     const std::string relation(const std::string& family_member);
     void display();
+    int countTreeLevel(node* countFromHere, int counter);
+
 };
 
 } // namespace family
