@@ -75,7 +75,7 @@ TEST_CASE("House of Windsor - addMother && addFather Tests"){
    CHECK_THROWS(windsor.addFather("for","Africa"));
 
 }
-/*
+
 TEST_CASE("House of Windsor - remove Tests"){
 CHECK_NOTHROW(windsor.remove("Albert")); // should remove Albert
 CHECK_THROWS(windsor.remove("Albert")); //   already removed
@@ -98,13 +98,10 @@ CHECK_THROWS(windsor.remove("Tsamina"));
 CHECK_THROWS(windsor.remove("mina"));
 CHECK_THROWS(windsor.remove("zangalewa"));
 
-
 // remain only with a small family by removing a whole brach
-
 CHECK_NOTHROW(windsor.remove("Charles")); // should work ok
-
 }
-*/
+
 TEST_CASE("House of Windsor - relation Tests"){
     // royal
 CHECK(windsor.relation("Charles") == string("father") );
