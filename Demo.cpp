@@ -19,7 +19,7 @@ int main() {
 	 .addFather("Isaac", "Avraham")
 	 .addFather("Avraham", "Terah");
 	
-	//T.display();                        // displays the tree in a human-friendly format.
+	T.display();                        // displays the tree in a human-friendly format.
 	
 	cout << T.relation("Yaakov") << endl;  // prints "father"
 	cout << T.relation("Rachel") << endl;  // prints "mother"
@@ -42,6 +42,5 @@ int main() {
 	cout << T.relation("Terah") << endl;  // prints "unrelated"
 	
 	T.remove("Avraham"); // removes Avraham and Terah
-	T.remove("Rivka"); // make sure it compiles
     return 0;
 }
