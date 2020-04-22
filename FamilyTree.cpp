@@ -35,37 +35,13 @@ void Tree::remove_node(node* ptr)
     //cout << "inside remove_node with " << ptr -> getName() << endl;
     if (ptr != NULL)
     {
-        if(ptr -> getSon() != NULL)
-         { 
-            // cout << "current father = " << ptr -> getName() << " and his son is = " << ptr -> getSon() -> getName() <<endl;
-             //cout << "NULLING THIS _>>>>" << " ptr name = " << " , " << ptr ->getName() << " , father = " << ptr->getFather()->getName() << ", ptr -> _father -> _origin_son ="
-             //<< ptr -> _father -> _origin_son ->getName() << endl;
-
-             ptr -> _father -> _origin_son = NULL;
-             ptr -> _origin_son ->_father =NULL;
-             //cout << ptr -> _father -> getName() <<endl;
-             ptr -> _father = NULL;
-             //cout << ptr -> getName() <<endl;
-            // cout << "current father = " << ptr -> getName() << " and his son is = " << ptr -> getSon() -> getName() <<endl;
-         }
         //cout << ptr ->getName() << endl;  
-        if (ptr -> getFather() != NULL) {
-            // cout << "removing " << ptr -> getFather() -> getName() << endl;
-             remove_node(ptr-> getFather())  ; }
-        if (ptr -> getMother() != NULL)  { 
-            //cout << "removing " << ptr -> getMother() -> getName() << endl;
-            remove_node(ptr-> getMother()) ;  } 
-        /*
-        if (ptr -> getSon() != NULL && ptr -> getSon() -> getName() != ptr -> getName()) {
-            cout << " removing " <<  ptr -> getSon() ->getName() <<endl; } 
-            */
+        cout << "removed" << ptr -> getName() << endl;
         delete ptr;
         return;
     }
     else
-        cout << "In else" << endl;
         return;
-        
 }
 
 Tree& Tree::addFather(const string &son, const string &father)
@@ -245,15 +221,33 @@ const string& Tree::find2GensOfRoot(const string &relation)
 
 void Tree::remove(const string& family_memeber_toRemove){
     node* temp = search(family_memeber_toRemove,_root);
-    if (temp -> getSon() -> getFather() -> getName() == temp -> getName() )
+    if (family_memeber_toRemove == _root ->getName())
     {
-        remove_node( temp -> getSon() -> getFather() );
+        throw invalid_argument("deleting root is forbidden");
+    }
+    if (temp == NULL)
+    {
+        throw invalid_argument("either removed already or wasn't there on the first place");
+    }
+    try{
+    if (temp -> getFather() != NULL) { remove(temp -> getFather() -> getName()); }
+    if (temp -> getMother() != NULL) { remove(temp -> getMother() -> getName()); }
+    
+    if (temp -> getSon() != NULL && family_memeber_toRemove == temp->getName() )
+    {
+        //cout <<  " this child will not longer recognize father " << temp ->getSon() -> getName() << endl;
+        remove_node( temp );
+        temp -> getSon() -> _father =NULL;
     }
     else if (temp -> getSon() -> getMother() -> getName() == temp -> getName())
     {
-        remove_node(temp -> getSon() -> getMother()) ;
+        //cout <<  " this child will not longer recognize mother " << temp ->getSon() -> getName() << endl;
+        remove_node(temp) ;
+        temp -> getSon() -> _mother =NULL;
     }
-    
+    } catch (const exception& e){
+        cout << e.what() << endl;
+    }
 }
 
 void Tree::display()
@@ -325,9 +319,11 @@ node* node::addFather(const string &father_name){
 
 const string Tree::candidate(bool sex,const int& wanted_level,node* cand)
 {   
-
-    //cout << "in candidate, checking " << cand -> getName() << endl;
-    if (cand -> getLevel() == wanted_level && sex == cand -> whatIsMySex())
+    
+    cout << "wanted_level = " << wanted_level << endl;
+    cout << "in candidate, checking " << cand -> getName() << endl;
+    /*
+    if (0 == wanted_level && sex == cand -> whatIsMySex())
     {
         return const_cast<string&> (cand->getName());
     }
@@ -335,13 +331,22 @@ const string Tree::candidate(bool sex,const int& wanted_level,node* cand)
     {
         throw string("unable to find match");
     }
+    */
+   if (wanted_level == 0)
+   {
+       return cand->getName();
+   }
+   if (wanted_level < 0)
+   {
+       throw invalid_argument("no match");
+   }
     try
     {
-        if (cand -> getLevel() < wanted_level && ( cand-> getMother() != NULL || cand -> getFather () != NULL )  )
+        if ( 0 <= wanted_level && ( cand-> getMother() != NULL || cand -> getFather () != NULL )  )
     {
-        if (cand -> getMother() != NULL && cand->getMother()->goingSomeWhere(wanted_level) )
+        if (cand -> getMother() != NULL && cand->goingSomeWhere(wanted_level,cand->getMother()) )
         { return candidate(sex,wanted_level,cand->getMother()); }
-        else if (cand -> getFather() != NULL )
+        else if (cand -> getFather() != NULL && cand ->goingSomeWhere( wanted_level, cand -> getFather() ) )
         { return candidate(sex,wanted_level,cand->getFather()); }
     }
     }
@@ -349,7 +354,7 @@ const string Tree::candidate(bool sex,const int& wanted_level,node* cand)
     {
         std::cerr << e.what() << '\n';
     }
-    return "notice that an error has occured";
+    return "error";
 }
 bool node::whatIsMySex()
 {
@@ -376,29 +381,35 @@ node *node::find(const string &relation)
 {
     return this;
 }
-bool node::goingSomeWhere(const int& level)
+bool node::goingSomeWhere(const int& level,node* current)
 {
-    if (_myLevel == level)
+    if (current == NULL)
+    {
+        return false;
+    }
+    cout << current->getName() << ", level= " << current->getLevel() << endl;
+    if (current->getLevel() == level)
     {
        return true;
     }
-    else if (_myLevel < level)
+    else if (getLevel() < level)
     {
+        /*
         if (getMother() == NULL && getFather() == NULL)
         {
             return false;
         }
-        if (getMother() == NULL && getFather() != NULL)
+        */
+        if (getFather() != NULL)
         {
-            return _father->goingSomeWhere(level);
+            return goingSomeWhere(level,current->getFather());
         }
-        else if (getMother() != NULL && getFather() == NULL)
+        if (getMother() != NULL)
         {
-            return _mother->goingSomeWhere(level);
+            return goingSomeWhere(level,current->getMother());
         }
     }
     return false;
-    
 }
 
 const string& node::getName(){

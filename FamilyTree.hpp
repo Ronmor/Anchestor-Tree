@@ -46,7 +46,7 @@ public:
     void remove();
     bool whatIsMySex();
     void nodeId();
-    bool goingSomeWhere(const int& level);
+    bool goingSomeWhere(const int& level,node*);
 
     friend class Tree;
 

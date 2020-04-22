@@ -11,7 +11,7 @@ using namespace std;
     BTW, Windsor decendants are known today as the royal family of the entire UK ! 
     */
 
-static family::Tree windsor("Harry");
+static family::Tree windsor ("Harry");
 
 TEST_CASE("House of Windsor - addMother && addFather Tests"){
    CHECK_NOTHROW(windsor.addFather("Harry","Charles"));
@@ -75,36 +75,8 @@ TEST_CASE("House of Windsor - addMother && addFather Tests"){
    CHECK_THROWS(windsor.addFather("for","Africa"));
 
 }
-/*
-TEST_CASE("House of Windsor - remove Tests"){
-CHECK_NOTHROW(windsor.remove("Albert")); // should remove Albert
-CHECK_THROWS(windsor.remove("Albert")); //   already removed
-CHECK_NOTHROW(windsor.remove("Edward_VII")); // should remove Edward_VII and his mother Victoria
-CHECK_THROWS(windsor.remove("Victoria")); //   already removed
-CHECK_NOTHROW(windsor.addMother("Edward_VII","Victoria"));
-
-// let us delete some people who are not on tree in the first place
-
-CHECK_THROWS(windsor.remove("pressure"));
-CHECK_THROWS(windsor.remove("on"));
-CHECK_THROWS(windsor.remove("you"));
-CHECK_THROWS(windsor.remove("belive"));
-CHECK_THROWS(windsor.remove("it"));
-CHECK_THROWS(windsor.remove("when"));
-CHECK_THROWS(windsor.remove("fall"));
-CHECK_THROWS(windsor.remove("get"));
-CHECK_THROWS(windsor.remove("up"));
-CHECK_THROWS(windsor.remove("Tsamina"));
-CHECK_THROWS(windsor.remove("mina"));
-CHECK_THROWS(windsor.remove("zangalewa"));
 
 
-// remain only with a small family by removing a whole brach
-
-CHECK_NOTHROW(windsor.remove("Charles")); // should work ok
-
-}
-*/
 TEST_CASE("House of Windsor - relation Tests"){
     // royal
 CHECK(windsor.relation("Charles") == string("father") );
@@ -171,5 +143,35 @@ CHECK_THROWS(windsor.find("neta"));
 CHECK_THROWS(windsor.find("ofri"));
 CHECK_THROWS(windsor.find("ron"));
 CHECK_THROWS(windsor.find("alex"));
+
+}
+
+TEST_CASE("House of Windsor - remove Tests"){
+//CHECK_NOTHROW(windsor.remove("Albert")); // should remove Albert
+//CHECK_THROWS(windsor.remove("Albert")); //   already removed
+CHECK_NOTHROW(windsor.remove("Edward_VII")); // should remove Edward_VII and his mother Victoria
+CHECK_THROWS(windsor.remove("Victoria")); //   already removed
+
+
+// let us delete some people who are not on tree in the first place
+
+CHECK_THROWS(windsor.remove("pressure"));
+CHECK_THROWS(windsor.remove("on"));
+CHECK_THROWS(windsor.remove("you"));
+CHECK_THROWS(windsor.remove("belive"));
+CHECK_THROWS(windsor.remove("it"));
+CHECK_THROWS(windsor.remove("when"));
+CHECK_THROWS(windsor.remove("fall"));
+CHECK_THROWS(windsor.remove("get"));
+CHECK_THROWS(windsor.remove("up"));
+CHECK_THROWS(windsor.remove("Tsamina"));
+CHECK_THROWS(windsor.remove("mina"));
+CHECK_THROWS(windsor.remove("zangalewa"));
+
+
+// remain only with a small family by removing a whole brach
+
+CHECK_NOTHROW(windsor.remove("Charles")); // should work ok
+
 
 }
