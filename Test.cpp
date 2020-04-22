@@ -76,8 +76,7 @@ TEST_CASE("House of Windsor - addMother && addFather Tests"){
 
 }
 
-<<<<<<< HEAD
-=======
+
 TEST_CASE("House of Windsor - remove Tests"){
 CHECK_NOTHROW(windsor.remove("Albert")); // should remove Albert
 CHECK_THROWS(windsor.remove("Albert")); //   already removed
@@ -103,7 +102,7 @@ CHECK_THROWS(windsor.remove("zangalewa"));
 // remain only with a small family by removing a whole brach
 CHECK_NOTHROW(windsor.remove("Charles")); // should work ok
 }
->>>>>>> c89da04766c6f22c62da34241b31e0d2f0bcc4c6
+
 
 TEST_CASE("House of Windsor - relation Tests"){
     // royal
@@ -173,7 +172,7 @@ CHECK_THROWS(windsor.find("ron"));
 CHECK_THROWS(windsor.find("alex"));
 
 }
-<<<<<<< HEAD
+
 
 TEST_CASE("House of Windsor - remove Tests"){
 //CHECK_NOTHROW(windsor.remove("Albert")); // should remove Albert
@@ -204,5 +203,4 @@ CHECK_NOTHROW(windsor.remove("Charles")); // should work ok
 
 
 }
-=======
->>>>>>> c89da04766c6f22c62da34241b31e0d2f0bcc4c6
+
